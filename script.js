@@ -1,4 +1,5 @@
 const damageRange = 0.3;
+      criticalHitRate = 0.1;
 let logIndex = 0;
 
 const playerData = {
@@ -69,56 +70,68 @@ insertText("currentEnemyHp", enemyData["hp"]);
 insertText("maxEnemyHp", enemyData["hp"]);
 
 document.getElementById("attack").addEventListener("click", function() {
-  let endGame = false;
+  let victory = false,
+      defeat = false;
+
   const playerName = '<span style="color: blue;">' + playerData["name"] + "</span>",
         enemyName = '<span style="color: red;">' + enemyData["name"] + "</span>";
 
-  const playerDamage = damageCalculation(playerData["attack"], enemyData["defence"]),
-        enemyDamage = damageCalculation(enemyData["attack"], playerData["defence"]);
-
+  // 敵への攻撃処理
+  let playerDamage = damageCalculation(playerData["attack"], enemyData["defence"]);
+  if (Math.random() < criticalHitRate) {
+    playerDamage *= 2;
+    insertLog(playerName + "の攻撃！クリティカルヒット！" + enemyName + "に" + playerDamage + "のダメージ！" )
+  } else {
+    insertLog(playerName + "の攻撃！" + enemyName + "に" + playerDamage + "のダメージ！" )
+  }
   enemyData["hp"] -= playerDamage;
-  playerData["hp"] -= enemyDamage;
-
   insertText("currentEnemyHp", enemyData["hp"]);
-  insertText("currentPlayerHp", playerData["hp"]);
-
   document.getElementById("currentEnemyHpGaugeValue").style.width = (enemyData["hp"] / enemyData["maxHp"] * 100) + "%";
-  document.getElementById("currentPlayerHpGaugeValue").style.width = (playerData["hp"] / playerData["maxHp"] * 100) + "%";
-
-  const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
-  const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
-
-  if (enemyLeftHp <= "50%") {
-    document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "yellow";
-  }
-  if (enemyLeftHp <= "20%") {
-    document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "red";
-  }
-  if (playerLeftHp <= "50%") {
-    document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "yellow";
-  }
-  if (playerLeftHp <= "20%") {
-    document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "red";
-  }
-
-insertLog(playerName + "の攻撃！" + enemyName + "に" + playerDamage + "のダメージ！" )
-insertLog(enemyName + "の攻撃！" + playerName + "に" + enemyDamage + "のダメージ！" )
 
   if (enemyData["hp"] <= 0) {
     alert("勝利！");
-    endGame = true;
+    victory = true;
     enemyData["hp"] = 0;
     insertText("currentEnemyHp", enemyData["hp"]);
     document.getElementById("currentEnemyHpGaugeValue").style.width = "0%";
-  } else if (playerData["hp"] <= 0) {
-    alert("敗北...");
-    endGame = true;
-    playerData["hp"] = 0;
-    insertText("currentPlayerHp", playerData["hp"]);
-    document.getElementById("currentPlayerHpGaugeValue").style.width = "0%";
   }
 
-  if (endGame) {
-  this.classList.add("deactive");
+  // プレイヤーへの攻撃処理
+  if (!victory) {
+    let enemyDamage = damageCalculation(enemyData["attack"], playerData["defence"]);
+    if (Math.random() < criticalHitRate) {
+      enemyDamage *= 2;
+      insertLog(enemyName + "の攻撃！クリティカルヒット！" + playerName + "に" + enemyDamage + "のダメージ！" )
+    } else {
+      insertLog(enemyName + "の攻撃！" + playerName + "に" + enemyDamage + "のダメージ！" )
+    }
+    playerData["hp"] -= enemyDamage;
+    insertText("currentPlayerHp", playerData["hp"]);
+    document.getElementById("currentPlayerHpGaugeValue").style.width = (playerData["hp"] / playerData["maxHp"] * 100) + "%";
+
+    if (playerData["hp"] <= 0) {
+      alert("敗北...");
+      defeat = true;
+      playerData["hp"] = 0;
+      insertText("currentPlayerHp", playerData["hp"]);
+      document.getElementById("currentPlayerHpGaugeValue").style.width = "0%";
+    }
+  }
+
+  if (victory || defeat) {
+    this.classList.add("deactive");
   }
 });
+// const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
+// const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
+
+// if (enemyLeftHp <= "20%") {
+//   document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "red";
+// } else if (enemyLeftHp <= "50%") {
+//   document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "yellow";
+// }
+// if (playerLeftHp <= "20%") {
+//   document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "red";
+// } else if (playerLeftHp <= "50%") {
+//   document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "yellow";
+// }
