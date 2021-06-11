@@ -7,12 +7,28 @@ const playerData = {
   defence: 2
 }
 
-const enemyData = {
-  name: "相手",
-  hp: 100,
-  attack: 4,
-  defence: 1
-}
+const enemiesData = [
+  {
+    name: "剣士",
+    hp: 30,
+    attack: 2,
+    defence: 1
+  },
+  {
+    name: "オーマイ",
+    hp: 70,
+    attack: 3,
+    defence: 2
+  },
+  {
+    name: "ゴーレム",
+    hp: 100,
+    attack: 4,
+    defence: 4
+  }
+];
+
+const enemyData = enemiesData[Math.floor(Math.random() * enemiesData.length)];
 
 playerData["maxHp"] = playerData["hp"];
 enemyData["maxHp"] = enemyData["hp"];
