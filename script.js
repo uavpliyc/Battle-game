@@ -20,25 +20,37 @@ const enemiesData = [
   },
   {
     name: "オーマイ",
-    hp: 70,
+    hp: 60,
     attack: 3,
     defence: 2
   },
   {
     name: "ゴーレム",
-    hp: 100,
+    hp: 80,
     attack: 4,
     defence: 3
   }
 ];
 
-const enemyData = enemiesData[Math.floor(Math.random() * enemiesData.length)];
+for (let i = 0; i < enemiesData.length; i++) {
+  enemiesData[i]["maxHp"] = enemiesData[i]["hp"];
+}
+let enemyData = enemiesData[Math.floor(Math.random() * enemiesData.length)];
 
 playerData["maxHp"] = playerData["hp"];
 enemyData["maxHp"] = enemyData["hp"];
 
 function insertText(id, text) {
   document.getElementById(id).textContent = text;
+}
+
+function showModal(title, hiddenNextBtn = false) {
+  document.getElementById("mask").classList.add("active");
+  document.getElementById("modal").classList.add("active");
+  document.getElementById("modalTitle").textContent = title;
+  if (hiddenNextBtn) {
+    document.getElementById("modalNextBtn").classList.add("hidden");
+  }
 }
 
 function damageCalculation(attack, defence) {
@@ -93,12 +105,20 @@ document.getElementById("attack").addEventListener("click", function() {
   insertText("currentEnemyHp", enemyData["hp"]);
   document.getElementById("currentEnemyHpGaugeValue").style.width = (enemyData["hp"] / enemyData["maxHp"] * 100) + "%";
 
+  const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
+
+  if (enemyLeftHp <= "20%") {
+    document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "red";
+  } else if (enemyLeftHp <= "50%") {
+    document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "yellow";
+  }
+
   if (enemyData["hp"] <= 0) {
-    alert("勝利！");
     victory = true;
     enemyData["hp"] = 0;
     insertText("currentEnemyHp", enemyData["hp"]);
     document.getElementById("currentEnemyHpGaugeValue").style.width = "0%";
+    showModal(enemyData["name"] + "を倒した！")
   }
 
   // プレイヤーへの攻撃処理
@@ -114,12 +134,21 @@ document.getElementById("attack").addEventListener("click", function() {
     insertText("currentPlayerHp", playerData["hp"]);
     document.getElementById("currentPlayerHpGaugeValue").style.width = (playerData["hp"] / playerData["maxHp"] * 100) + "%";
 
+    const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
+
+    if (playerLeftHp <= "20%") {
+      document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "red";
+    } else if (playerLeftHp <= "50%") {
+      document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "yellow";
+    }
+
     if (playerData["hp"] <= 0) {
-      alert("敗北...");
       defeat = true;
       playerData["hp"] = 0;
       insertText("currentPlayerHp", playerData["hp"]);
       document.getElementById("currentPlayerHpGaugeValue").style.width = "0%";
+
+      showModal(enemyData["name"] + "に負けた…", true)
     }
   }
 
@@ -130,19 +159,27 @@ document.getElementById("attack").addEventListener("click", function() {
   if (victory) {
     nowKilledNumber++;
     insertText("nowKilledNumber", nowKilledNumber);
+
+    if (nowKilledNumber === targetKillNumber) {
+      showModal("ゲームクリア！", true)
+    }
   }
 
 });
-// const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
-// const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
 
-// if (enemyLeftHp <= "20%") {
-//   document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "red";
-// } else if (enemyLeftHp <= "50%") {
-//   document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "yellow";
-// }
-// if (playerLeftHp <= "20%") {
-//   document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "red";
-// } else if (playerLeftHp <= "50%") {
-//   document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "yellow";
-// }
+document.getElementById("modalNextBtn").addEventListener("click", function() {
+  enemyData["hp"] = enemyData["maxHp"];
+  enemyData = enemiesData[Math.floor(Math.random() * enemiesData.length)];
+  insertText("enemyName", enemyData["name"]);
+  insertText("currentEnemyHp", enemyData["hp"]);
+  insertText("maxEnemyHp", enemyData["hp"]);
+  document.getElementById("currentEnemyHpGaugeValue").style.width = "100%";
+  document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "#6bf";
+
+  document.getElementById("mask").classList.remove("active");
+  document.getElementById("modal").classList.remove("active");
+  document.getElementById("attack").classList.remove("deactive");
+})
+
+
+

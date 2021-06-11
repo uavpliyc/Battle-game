@@ -105,3 +105,61 @@ section h2 {
   pointer-events: none;
   opacity: 0.5;
 }
+
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: 0.3s;
+  opacity: 0;
+  visibility: hidden;
+}
+.mask.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  min-width: 500px;
+  transition: 0.3s;
+  opacity: 0;
+  visibility: hidden;
+}
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modalTitle {
+  font-weight: bold;
+  font-size: 40px;
+  text-align: center;
+}
+
+.modalNextBtn {
+  margin: 50px auto 0;
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #28f;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modalNextBtn.hidden {
+  display: none;
+}
