@@ -1,4 +1,5 @@
 const damageRange = 0.3;
+let logIndex = 0;
 
 const playerData = {
   name: "プレイヤー",
@@ -11,7 +12,7 @@ const enemiesData = [
   {
     name: "剣士",
     hp: 30,
-    attack: 2,
+    attack: 3,
     defence: 1
   },
   {
@@ -24,7 +25,7 @@ const enemiesData = [
     name: "ゴーレム",
     hp: 100,
     attack: 4,
-    defence: 4
+    defence: 3
   }
 ];
 
@@ -51,6 +52,14 @@ function damageCalculation(attack, defence) {
   }
 }
 
+function insertLog(texts) {
+  const logsElement = document.getElementById("logs"),
+        createLog = document.createElement("li");
+  logIndex++;
+  createLog.innerHTML = logIndex + ": " + texts;
+  logsElement.insertBefore(createLog, logsElement.firstChild)
+}
+
 insertText("playerName", playerData["name"]);
 insertText("currentPlayerHp", playerData["hp"]);
 insertText("maxPlayerHp", playerData["hp"]);
@@ -61,9 +70,11 @@ insertText("maxEnemyHp", enemyData["hp"]);
 
 document.getElementById("attack").addEventListener("click", function() {
   let endGame = false;
+  const playerName = '<span style="color: blue;">' + playerData["name"] + "</span>",
+        enemyName = '<span style="color: red;">' + enemyData["name"] + "</span>";
 
   const playerDamage = damageCalculation(playerData["attack"], enemyData["defence"]),
-        enemyDamage = damageCalculation(enemyData["attack"], playerData["defence"])
+        enemyDamage = damageCalculation(enemyData["attack"], playerData["defence"]);
 
   enemyData["hp"] -= playerDamage;
   playerData["hp"] -= enemyDamage;
@@ -74,14 +85,24 @@ document.getElementById("attack").addEventListener("click", function() {
   document.getElementById("currentEnemyHpGaugeValue").style.width = (enemyData["hp"] / enemyData["maxHp"] * 100) + "%";
   document.getElementById("currentPlayerHpGaugeValue").style.width = (playerData["hp"] / playerData["maxHp"] * 100) + "%";
 
-  const leftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
+  const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
+  const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
 
-  if (leftHp <= "50%") {
+  if (enemyLeftHp <= "50%") {
     document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "yellow";
   }
-  if (leftHp <= "20%") {
+  if (enemyLeftHp <= "20%") {
     document.getElementById("currentEnemyHpGaugeValue").style.backgroundColor = "red";
   }
+  if (playerLeftHp <= "50%") {
+    document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "yellow";
+  }
+  if (playerLeftHp <= "20%") {
+    document.getElementById("currentPlayerHpGaugeValue").style.backgroundColor = "red";
+  }
+
+insertLog(playerName + "の攻撃！" + enemyName + "に" + playerDamage + "のダメージ！" )
+insertLog(enemyName + "の攻撃！" + playerName + "に" + enemyDamage + "のダメージ！" )
 
   if (enemyData["hp"] <= 0) {
     alert("勝利！");

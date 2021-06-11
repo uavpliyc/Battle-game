@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+li {
+  list-style: none;
+}
+
 a {
   color: #333;
   text-decoration: none;
@@ -59,6 +63,18 @@ section h2 {
   margin: 0 5px;
 }
 
+.logs {
+  border: 1px solid #777;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  line-height: 1.8;
+  height: 250px;
+  overflow: auto;
+  margin-top: 30px;
+  box-shadow: 0 0 3px 0 #777 inset;
+}
+
 .attack {
   margin: 50px auto 0;
   width: 200px;
@@ -77,5 +93,5 @@ section h2 {
 
 .attack.deactive {
   pointer-events: none;
-  opacity: .5;
+  opacity: 0.5;
 }
