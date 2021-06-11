@@ -1,6 +1,8 @@
 const damageRange = 0.3;
       criticalHitRate = 0.1;
-let logIndex = 0;
+let logIndex = 0,
+    nowKilledNumber = 0,
+    targetKillNumber = 2;
 
 const playerData = {
   name: "プレイヤー",
@@ -69,6 +71,9 @@ insertText("enemyName", enemyData["name"]);
 insertText("currentEnemyHp", enemyData["hp"]);
 insertText("maxEnemyHp", enemyData["hp"]);
 
+insertText("nowKilledNumber", nowKilledNumber);
+insertText("targetKillNumber", targetKillNumber);
+
 document.getElementById("attack").addEventListener("click", function() {
   let victory = false,
       defeat = false;
@@ -121,6 +126,12 @@ document.getElementById("attack").addEventListener("click", function() {
   if (victory || defeat) {
     this.classList.add("deactive");
   }
+
+  if (victory) {
+    nowKilledNumber++;
+    insertText("nowKilledNumber", nowKilledNumber);
+  }
+
 });
 // const enemyLeftHp = document.getElementById("currentEnemyHpGaugeValue").style.width;
 // const playerLeftHp = document.getElementById("currentPlayerHpGaugeValue").style.width;
