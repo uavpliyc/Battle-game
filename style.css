@@ -98,7 +98,14 @@ section h2 {
   outline: none;
   font-size: 20px;
   border-radius: 5px;
+  border-bottom: solid 4px #627295;
   cursor: pointer;
+}
+
+.attack:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);/*下に動く*/
+  border-bottom: none;/*線を消す*/
 }
 
 .attack.deactive {
